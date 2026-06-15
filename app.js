@@ -177,8 +177,6 @@
 //     console.error("❌ Error:", err.message);
 //   }
 // });
-
-// client.initialize();
 require("dotenv").config();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
@@ -188,7 +186,6 @@ const http = require("http");
 
 let currentQR = "";
 
-// HTTP server with QR page
 const PORT = process.env.PORT || 3000;
 http.createServer(async (req, res) => {
   if (req.url === "/qr" && currentQR) {
@@ -216,14 +213,12 @@ http.createServer(async (req, res) => {
     `);
   } else {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Bot is running");
+    res.end("Bot is running ✅");
   }
 }).listen(PORT, "0.0.0.0", () => {
   console.log(`🌐 Server running on port ${PORT}`);
-  console.log(`📱 QR page: /qr`);
 });
 
-// WhatsApp client
 const client = new Client({
   authStrategy: new LocalAuth({ clientId: "vecura-bot" }),
   puppeteer: {
@@ -310,4 +305,4 @@ client.on("message", async (msg) => {
   }
 });
 
-// client.initialize();
+client.initialize();
