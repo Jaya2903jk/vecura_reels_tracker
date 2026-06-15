@@ -8,7 +8,7 @@ const { google } = require("googleapis");
 
 // const client = new Client({
 //   authStrategy: new LocalAuth({
-//     clientId: "vecura-bot",
+//     clientId: "vecura-bot",  
 //   }),
 //   puppeteer: {
 //     headless: false,
@@ -22,11 +22,20 @@ const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "vecura-bot",
   }),
+// puppeteer: {
+//   headless: true,
+//   args: [
+//     "--no-sandbox",
+//     "--disable-setuid-sandbox"
+//   ]
+// }
 puppeteer: {
-  headless: true,
+  headless: "new",
   args: [
     "--no-sandbox",
-    "--disable-setuid-sandbox"
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--single-process"
   ]
 }
 });
@@ -161,11 +170,20 @@ client.on("message", async (msg) => {
 });
 
 client.initialize();
+
 app.get("/", (req, res) => {
   res.send("WhatsApp Bot Running ✅");
 });
-
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+
+const server = app.listen(PORT, () => {
   console.log("Server running on port", PORT);
+
+  // 🔥 START WHATSAPP ONLY AFTER SERVER IS READY
+  setTimeout(() => {
+    client.initialize();
+  }, 3000);
 });
