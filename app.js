@@ -8,12 +8,16 @@ const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "vecura-bot",
   }),
-  puppeteer: {
-    headless: false,
-    executablePath:
-      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    args: ["--no-sandbox"],
-  },
+//   puppeteer: {
+//     headless: false,
+//     executablePath:
+//       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+//     args: ["--no-sandbox"],
+//   },
+puppeteer: {
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"]
+}
 });
 
 // QR Event
