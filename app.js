@@ -43,43 +43,69 @@ client.on("disconnected", (reason) => {
   console.log(" DISCONNECTED:", reason);
 });
 
+// async function saveToSheet(sender, reelUrl) {
+//   try {
+//     const auth = new google.auth.GoogleAuth({
+//       keyFile: "./service-account.json",
+//       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+//     });
+
+//     const sheets = google.sheets({
+//       version: "v4",
+//       auth,
+//     });
+ 
+//     await sheets.spreadsheets.values.append({
+//       spreadsheetId: process.env.SHEET_ID,
+//       range: "Sheet1!A:C",
+//       valueInputOption: "USER_ENTERED",
+//       resource: {
+//         values: [
+//           [
+//             new Date().toLocaleString(),
+//             sender,
+//             reelUrl,
+//           ],
+//         ],
+//       },
+//     });
+
+//     console.log("✅ Saved To Google Sheet");
+//     console.log("Sender:", sender);
+//     console.log("Link:", reelUrl);
+
+//   } catch (error) {
+//     console.error("❌ Google Sheet Error");
+//     console.error(error.message);
+//   }
+// }
 async function saveToSheet(sender, reelUrl) {
   try {
     const auth = new google.auth.GoogleAuth({
-      keyFile: "./service-account.json",
+      credentials: JSON.parse(process.env.GOOGLE_CREDS),
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
-    const sheets = google.sheets({
-      version: "v4",
-      auth,
-    });
- 
+    const sheets = google.sheets({ version: "v4", auth });
+
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SHEET_ID,
       range: "Sheet1!A:C",
       valueInputOption: "USER_ENTERED",
       resource: {
-        values: [
-          [
-            new Date().toLocaleString(),
-            sender,
-            reelUrl,
-          ],
-        ],
+        values: [[
+          new Date().toLocaleString(),
+          sender,
+          reelUrl,
+        ]],
       },
     });
 
-    console.log("✅ Saved To Google Sheet");
-    console.log("Sender:", sender);
-    console.log("Link:", reelUrl);
-
-  } catch (error) {
-    console.error("❌ Google Sheet Error");
-    console.error(error.message);
+    console.log("✅ Saved To Sheet");
+  } catch (err) {
+    console.log("❌ Sheet Error:", err.message);
   }
 }
-
 client.on("message", async (msg) => {
   try {
 
