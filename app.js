@@ -177,6 +177,7 @@ http.createServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(`<html><body style="text-align:center;font-family:sans-serif;margin-top:50px">
       <h2>✅ Bot already connected!</h2>
+      <p>WhatsApp is running 24/7</p>
     </body></html>`);
   } else {
     res.writeHead(200);
@@ -184,6 +185,7 @@ http.createServer(async (req, res) => {
   }
 }).listen(PORT, "0.0.0.0", () => {
   console.log(`🌐 Server running on port ${PORT}`);
+  console.log(`📱 QR page: http://localhost:${PORT}/qr`);
 });
 
 const isLocal = !process.env.RAILWAY_ENVIRONMENT;
@@ -194,7 +196,7 @@ const client = new Client({
     headless: isLocal ? false : true,
     executablePath: isLocal
       ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-      : process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium",
+      : "/usr/bin/chromium",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -212,9 +214,7 @@ client.on("qr", async (qr) => {
   currentQR = qr;
   console.log("📱 QR Ready!");
   qrcode.generate(qr, { small: true });
-  if (isLocal) {
-    console.log("Open: http://localhost:3000/qr");
-  }
+  console.log(`👉 Open: http://localhost:${PORT}/qr`);
 });
 
 client.on("authenticated", () => {
@@ -237,7 +237,7 @@ client.on("disconnected", (reason) => {
 async function saveToSheet(sender, reelUrl) {
   try {
     if (!process.env.GOOGLE_CREDS || !process.env.SHEET_ID) {
-      console.log("Missing env variables");
+      console.log("❌ Missing env variables");
       return;
     }
     const auth = new google.auth.GoogleAuth({
@@ -271,7 +271,8 @@ client.on("message", async (msg) => {
     );
     if (!instaLink) return;
     const contact = await msg.getContact();
-    const senderName = contact.pushname || contact.name || msg.author || "Unknown";
+    const senderName =
+      contact.pushname || contact.name || msg.author || "Unknown";
     await saveToSheet(senderName, instaLink[0]);
   } catch (err) {
     console.error("❌ Error:", err.message);
