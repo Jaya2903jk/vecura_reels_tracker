@@ -1,0 +1,6 @@
+notepad .gitignore
+node_modules/
+.env
+.wwebjs_auth/
+.wwebjs_cache/
+service-account.json

@@ -1,0 +1,129 @@
+require("dotenv").config();
+
+const { Client, LocalAuth } = require("whatsapp-web.js");
+const qrcode = require("qrcode-terminal");
+const { google } = require("googleapis");
+
+const client = new Client({
+  authStrategy: new LocalAuth({
+    clientId: "vecura-bot",
+  }),
+  puppeteer: {
+    headless: false,
+    executablePath:
+      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    args: ["--no-sandbox"],
+  },
+});
+
+// QR Event
+client.on("qr", (qr) => {
+  console.log("📱 Scan QR Code");
+  qrcode.generate(qr, { small: true });
+});
+
+// Authenticated
+client.on("authenticated", () => {
+  console.log("✅ AUTHENTICATED");
+});
+
+// Ready
+client.on("ready", () => {
+  console.log("✅ WhatsApp Connected");
+});
+
+// Auth Failure
+client.on("auth_failure", (msg) => {
+  console.log(" AUTH FAILURE");
+  console.log(msg);
+});
+
+// Disconnected
+client.on("disconnected", (reason) => {
+  console.log(" DISCONNECTED:", reason);
+});
+
+async function saveToSheet(sender, reelUrl) {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: "./service-account.json",
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
+
+    const sheets = google.sheets({
+      version: "v4",
+      auth,
+    });
+ 
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: process.env.SHEET_ID,
+      range: "Sheet1!A:C",
+      valueInputOption: "USER_ENTERED",
+      resource: {
+        values: [
+          [
+            new Date().toLocaleString(),
+            sender,
+            reelUrl,
+          ],
+        ],
+      },
+    });
+
+    console.log("✅ Saved To Google Sheet");
+    console.log("Sender:", sender);
+    console.log("Link:", reelUrl);
+
+  } catch (error) {
+    console.error("❌ Google Sheet Error");
+    console.error(error.message);
+  }
+}
+
+client.on("message", async (msg) => {
+  try {
+
+    // Group only
+    if (!msg.from.includes("@g.us")) {
+      return;
+    }
+
+    const chat = await msg.getChat();
+
+    console.log("Group Name:", chat.name);
+
+    // Exact group name
+    if (chat.name !== "Vcura") {
+      return;
+    }
+
+    const messageText = msg.body || "";
+
+    // Instagram link only
+    const instaLink = messageText.match(
+      /https?:\/\/(www\.)?instagram\.com\/[^\s]+/i
+    );
+
+    if (!instaLink) {
+      return;
+    }
+
+    const contact = await msg.getContact();
+
+    const senderName =
+      contact.pushname ||
+      contact.name ||
+      msg.author ||
+      "Unknown";
+
+    await saveToSheet(
+      senderName,
+      instaLink[0]
+    );
+
+  } catch (err) {
+    console.error("❌ Error:", err.message);
+  }
+});
+
+client.initialize();
