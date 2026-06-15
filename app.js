@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const express = require("express");
+const app = express();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { google } = require("googleapis");
@@ -159,3 +161,11 @@ client.on("message", async (msg) => {
 });
 
 client.initialize();
+app.get("/", (req, res) => {
+  res.send("WhatsApp Bot Running ✅");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
+});
