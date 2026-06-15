@@ -3,7 +3,17 @@ require("dotenv").config();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { google } = require("googleapis");
+const http = require("http"); // ← ADD THIS
 
+// ── Minimal HTTP server so Railway doesn't kill the process ──
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end("WhatsApp Bot is running ✅");
+}).listen(PORT, () => {
+  console.log(`🌐 HTTP server listening on port ${PORT}`);
+});
+// ─────────────────────────────────────────────────────────────
 
 const client = new Client({
   authStrategy: new LocalAuth({
