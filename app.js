@@ -4,20 +4,30 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { google } = require("googleapis");
 
-const client = new Client({
-  authStrategy: new LocalAuth({
-    clientId: "vecura-bot",
-  }),
+// const client = new Client({
+//   authStrategy: new LocalAuth({
+//     clientId: "vecura-bot",
+//   }),
 //   puppeteer: {
 //     headless: false,
 //     executablePath:
 //       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
 //     args: ["--no-sandbox"],
 //   },
-puppeteer: {
-  headless: true,
-  args: ["--no-sandbox", "--disable-setuid-sandbox"]
-}
+
+// });
+const client = new Client({
+  authStrategy: new LocalAuth({
+    clientId: "vecura-bot",
+  }),
+  puppeteer: {
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    ]
+  }
 });
 
 // QR Event
@@ -85,6 +95,11 @@ client.on("disconnected", (reason) => {
 // }
 async function saveToSheet(sender, reelUrl) {
   try {
+    if (!process.env.GOOGLE_CREDS || !process.env.SHEET_ID) {
+      console.log("Missing env variables");
+      return;
+    }
+
     const auth = new google.auth.GoogleAuth({
       credentials: JSON.parse(process.env.GOOGLE_CREDS),
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
