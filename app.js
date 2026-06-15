@@ -20,15 +20,13 @@ const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "vecura-bot",
   }),
-  puppeteer: {
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
-  },
+puppeteer: {
+  headless: true,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox"
+  ]
+}
 });
 
 // QR Event
