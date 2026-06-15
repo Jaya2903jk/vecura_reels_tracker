@@ -18,31 +18,19 @@ const { google } = require("googleapis");
 //   },
 
 // });
-// const client = new Client({
-//   authStrategy: new LocalAuth({
-//     clientId: "vecura-bot",
-//   }),
-// puppeteer: {
-//   headless: true,
-//   args: [
-//     "--no-sandbox",
-//     "--disable-setuid-sandbox"
-//   ]
-// }
-// });
 const client = new Client({
   authStrategy: new LocalAuth({
-    clientId: "vecura-bot"
+    clientId: "vecura-bot",
   }),
-  puppeteer: {
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage"
-    ]
-  }
+puppeteer: {
+  headless: true,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox"
+  ]
+}
 });
+
 // QR Event
 client.on("qr", (qr) => {
   console.log("📱 Scan QR Code");
@@ -174,20 +162,20 @@ client.on("message", async (msg) => {
 
 client.initialize();
 
-app.get("/", (req, res) => {
-  res.send("WhatsApp Bot Running ✅");
-});
+// app.get("/", (req, res) => {
+//   res.send("WhatsApp Bot Running ✅");
+// });
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+// const server = app.listen(PORT, () => {
+//   console.log("Server running on port", PORT);
 
-  // 🔥 START WHATSAPP ONLY AFTER SERVER IS READY
-  setTimeout(() => {
-    client.initialize();
-  }, 3000);
-});
+//   // 🔥 START WHATSAPP ONLY AFTER SERVER IS READY
+//   setTimeout(() => {
+//     client.initialize();
+//   }, 3000);
+// });
 // const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
 //   console.log("Server running on port", PORT);
