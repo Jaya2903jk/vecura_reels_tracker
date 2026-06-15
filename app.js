@@ -1,23 +1,10 @@
 require("dotenv").config();
 
-const express = require("express");
-const app = express();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { google } = require("googleapis");
 
-// const client = new Client({
-//   authStrategy: new LocalAuth({
-//     clientId: "vecura-bot",  
-//   }),
-//   puppeteer: {
-//     headless: false,
-//     executablePath:
-//       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-//     args: ["--no-sandbox"],
-//   },
 
-// });
 const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "vecura-bot",
@@ -162,21 +149,3 @@ client.on("message", async (msg) => {
 
 client.initialize();
 
-// app.get("/", (req, res) => {
-//   res.send("WhatsApp Bot Running ✅");
-// });
-
-// const PORT = process.env.PORT || 3000;
-
-// const server = app.listen(PORT, () => {
-//   console.log("Server running on port", PORT);
-
-//   // 🔥 START WHATSAPP ONLY AFTER SERVER IS READY
-//   setTimeout(() => {
-//     client.initialize();
-//   }, 3000);
-// });
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log("Server running on port", PORT);
-// });
