@@ -216,7 +216,7 @@ http.createServer(async (req, res) => {
     `);
   } else {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Bot is running ✅");
+    res.end("Bot is running");
   }
 }).listen(PORT, "0.0.0.0", () => {
   console.log(`🌐 Server running on port ${PORT}`);
@@ -310,4 +310,4 @@ client.on("message", async (msg) => {
   }
 });
 
-client.initialize();
+// client.initialize();
