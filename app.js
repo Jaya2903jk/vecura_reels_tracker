@@ -18,10 +18,10 @@ const { google } = require("googleapis");
 //   },
 
 // });
-const client = new Client({
-  authStrategy: new LocalAuth({
-    clientId: "vecura-bot",
-  }),
+// const client = new Client({
+//   authStrategy: new LocalAuth({
+//     clientId: "vecura-bot",
+//   }),
 // puppeteer: {
 //   headless: true,
 //   args: [
@@ -29,17 +29,20 @@ const client = new Client({
 //     "--disable-setuid-sandbox"
 //   ]
 // }
-puppeteer: {
-  headless: "new",
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--single-process"
-  ]
-}
+// });
+const client = new Client({
+  authStrategy: new LocalAuth({
+    clientId: "vecura-bot"
+  }),
+  puppeteer: {
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    ]
+  }
 });
-
 // QR Event
 client.on("qr", (qr) => {
   console.log("📱 Scan QR Code");
@@ -174,9 +177,7 @@ client.initialize();
 app.get("/", (req, res) => {
   res.send("WhatsApp Bot Running ✅");
 });
-app.get("/health", (req, res) => {
-  res.send("OK");
-});
+
 const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
@@ -187,3 +188,7 @@ const server = app.listen(PORT, () => {
     client.initialize();
   }, 3000);
 });
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log("Server running on port", PORT);
+// });
