@@ -32,6 +32,7 @@ const client = new Client({
   authStrategy: new LocalAuth({ clientId: "vecura-bot" }),
   puppeteer: {
     headless: true,
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -40,6 +41,7 @@ const client = new Client({
       "--no-first-run",
       "--no-zygote",
       "--single-process",
+      "--disable-extensions",
     ],
   },
 });

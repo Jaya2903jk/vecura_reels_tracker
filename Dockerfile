@@ -1,12 +1,18 @@
-FROM ghcr.io/puppeteer/puppeteer:21.6.1
+FROM node:20-bullseye-slim
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+# Install Chrome
+RUN apt-get update && apt-get install -y \
+    chromium \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install
 
 COPY . .
 
