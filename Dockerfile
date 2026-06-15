@@ -1,6 +1,5 @@
 FROM node:20-bullseye-slim
 
-# Install Chrome
 RUN apt-get update && apt-get install -y \
     chromium \
     --no-install-recommends \
