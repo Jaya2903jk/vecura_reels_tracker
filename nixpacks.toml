@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["glib", "nss", "atk", "cups", "libdrm", "libxkbcommon", "libx11", "libxcomposite", "libxdamage", "libxrandr", "mesa"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[start]
+cmd = "node app.js"

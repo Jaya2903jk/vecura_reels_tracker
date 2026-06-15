@@ -21,16 +21,14 @@ const client = new Client({
     clientId: "vecura-bot",
   }),
   puppeteer: {
-  headless: "new",
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-gpu",
-    "--single-process"
-  ]
-}
- 
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+    ],
+  },
 });
 
 // QR Event
@@ -71,7 +69,7 @@ client.on("disconnected", (reason) => {
 //       version: "v4",
 //       auth,
 //     });
- 
+
 //     await sheets.spreadsheets.values.append({
 //       spreadsheetId: process.env.SHEET_ID,
 //       range: "Sheet1!A:C",
@@ -115,11 +113,7 @@ async function saveToSheet(sender, reelUrl) {
       range: "Sheet1!A:C",
       valueInputOption: "USER_ENTERED",
       resource: {
-        values: [[
-          new Date().toLocaleString(),
-          sender,
-          reelUrl,
-        ]],
+        values: [[new Date().toLocaleString(), sender, reelUrl]],
       },
     });
 
@@ -130,7 +124,6 @@ async function saveToSheet(sender, reelUrl) {
 }
 client.on("message", async (msg) => {
   try {
-
     // Group only
     if (!msg.from.includes("@g.us")) {
       return;
@@ -149,7 +142,7 @@ client.on("message", async (msg) => {
 
     // Instagram link only
     const instaLink = messageText.match(
-      /https?:\/\/(www\.)?instagram\.com\/[^\s]+/i
+      /https?:\/\/(www\.)?instagram\.com\/[^\s]+/i,
     );
 
     if (!instaLink) {
@@ -159,16 +152,9 @@ client.on("message", async (msg) => {
     const contact = await msg.getContact();
 
     const senderName =
-      contact.pushname ||
-      contact.name ||
-      msg.author ||
-      "Unknown";
+      contact.pushname || contact.name || msg.author || "Unknown";
 
-    await saveToSheet(
-      senderName,
-      instaLink[0]
-    );
-
+    await saveToSheet(senderName, instaLink[0]);
   } catch (err) {
     console.error("❌ Error:", err.message);
   }
