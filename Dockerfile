@@ -1,14 +1,15 @@
-FROM node:18-slim
+FROM ghcr.io/puppeteer/puppeteer:21.6.1
 
-RUN apt-get update && apt-get install -y \
-  libnss3 libatk1.0-0 libx11-6 libxcomposite1 \
-  libxdamage1 libxrandr2 libgbm1 libgtk-3-0 \
-  libasound2
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm install
+RUN npm ci --omit=dev
 
 COPY . .
+
+EXPOSE 3000
 
 CMD ["node", "app.js"]

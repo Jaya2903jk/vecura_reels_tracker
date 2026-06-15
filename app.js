@@ -16,19 +16,33 @@ http.createServer((req, res) => {
 });
 // ─────────────────────────────────────────────────────────────
 
+// const client = new Client({
+//   authStrategy: new LocalAuth({
+//     clientId: "vecura-bot",
+//   }),
+// puppeteer: {
+//   headless: true,
+//   args: [
+//     "--no-sandbox",
+//     "--disable-setuid-sandbox"
+//   ]
+// }
+// });
 const client = new Client({
-  authStrategy: new LocalAuth({
-    clientId: "vecura-bot",
-  }),
-puppeteer: {
-  headless: true,
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox"
-  ]
-}
+  authStrategy: new LocalAuth({ clientId: "vecura-bot" }),
+  puppeteer: {
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+    ],
+  },
 });
-
 // QR Event
 client.on("qr", (qr) => {
   console.log("📱 Scan QR Code");
