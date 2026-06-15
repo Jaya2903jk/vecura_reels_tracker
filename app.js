@@ -1,6 +1,7 @@
 require("dotenv").config();
+const { Client, LocalAuth, NoWebCache } = require("whatsapp-web.js");
 
-const { Client, LocalAuth } = require("whatsapp-web.js");
+// const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { google } = require("googleapis");
 
@@ -30,6 +31,7 @@ http.createServer((req, res) => {
 // });
 const client = new Client({
   authStrategy: new LocalAuth({ clientId: "vecura-bot" }),
+  webCache: new NoWebCache(),  // ← ADD THIS
   puppeteer: {
     headless: true,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium",
